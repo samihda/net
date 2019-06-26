@@ -1,5 +1,6 @@
 import java.net.*;
 import java.util.*;
+import static java.lang.System.out;
 
 public class Ls {
     public static void main(String[] args) throws SocketException {
@@ -14,14 +15,14 @@ public class Ls {
     private static void displayInfo(NetworkInterface iface) throws SocketException {
         Enumeration<InetAddress> addresses = iface.getInetAddresses();
 
-        System.out.printf("%s\n", iface.getName());
+        out.printf("%s\n", iface.getName());
 
         for (InetAddress address: Collections.list(addresses)) {
-            System.out.printf("Address: %s\n", address);
+            out.printf("Address: %s\n", address);
         }
 
         if (iface.isUp()) {
-            System.out.printf("Status: UP\n");
+            out.printf("Status: UP\n");
         }
     }
 }
