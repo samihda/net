@@ -19,5 +19,9 @@ public class Ls {
         for (InetAddress address: Collections.list(addresses)) {
             System.out.printf("Address: %s\n", address);
         }
+
+        if (iface.isUp()) {
+            System.out.printf("Status: UP\n");
+        }
     }
 }
