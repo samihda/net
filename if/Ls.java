@@ -7,7 +7,11 @@ public class Ls {
             NetworkInterface.getNetworkInterfaces();
 
         for (NetworkInterface iface: Collections.list(ifaces)) {
-            System.out.printf("Name: %s\n", iface.getName());
+            displayInfo(iface);
         }
+    }
+
+    private static void displayInfo(NetworkInterface iface) throws SocketException {
+        System.out.printf("Name: %s\n", iface.getName());
     }
 }
