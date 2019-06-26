@@ -12,6 +12,12 @@ public class Ls {
     }
 
     private static void displayInfo(NetworkInterface iface) throws SocketException {
+        Enumeration<InetAddress> addresses = iface.getInetAddresses();
+
         System.out.printf("Name: %s\n", iface.getName());
+
+        for (InetAddress address: Collections.list(addresses)) {
+            System.out.printf("Address: %s\n", address);
+        }
     }
 }
