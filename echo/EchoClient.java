@@ -24,7 +24,6 @@ public class EchoClient {
 
                 request = stdIn.readLine();
                 if (request != null) {
-                    System.out.println("Client: " + request);
                     socketOut.println(request);
                 }
             }
