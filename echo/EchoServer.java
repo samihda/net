@@ -3,6 +3,11 @@ import java.io.*;
 
 public class EchoServer {
     public static void main(String[] args) throws IOException {
+        if (args.length != 1) {
+            System.err.println("Usage: java EchoServer <port>");
+            System.exit(1);
+        }
+
         int portNumber = Integer.parseInt(args[0]);
 
         try (
