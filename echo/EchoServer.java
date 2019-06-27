@@ -3,7 +3,7 @@ import java.io.*;
 
 public class EchoServer {
     public static void main(String[] args) throws IOException {
-        int portNumber = 4444;
+        int portNumber = Integer.parseInt(args[0]);
 
         try (
              ServerSocket serverSocket = new ServerSocket(portNumber);
