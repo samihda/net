@@ -21,8 +21,10 @@ public class EchoClient {
 
             while ((response = socketIn.readLine()) != null) {
                 System.out.println("Server: " + response);
+                System.out.print("> ");
 
                 request = stdIn.readLine();
+
                 if (request != null) {
                     socketOut.println(request);
                 }
