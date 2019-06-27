@@ -13,6 +13,8 @@ public class EchoServer {
         try (
              ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
+            System.out.println("Listening...");
+
             while (true) {
                 new EchoServerThread(serverSocket.accept()).start();
             }
