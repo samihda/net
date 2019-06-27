@@ -23,7 +23,7 @@ public class EchoServer {
                 clientOut.println(reply);
             }
         } catch (IOException e) {
-            System.out.println("An error has occured.");
+            System.out.println(e.getMessage());
         }
     }
 }
