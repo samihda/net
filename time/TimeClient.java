@@ -5,28 +5,33 @@ import java.util.*;
 public class TimeClient {
     public static void main(String[] args) throws IOException {
         if (args.length != 2) {
-            System.err.println("Usage: java TimeClient <host> <port>");
+            System.err.println("Usage: java TimeClient <group> <port>");
             System.exit(1);
         }
 
-        String hostName = args[0];
+        String groupIp = args[0];
         int portNumber = Integer.parseInt(args[1]);
 
-        DatagramSocket socket = new DatagramSocket();
+        MulticastSocket socket = new MulticastSocket(portNumber);
+        InetAddress address = InetAddress.getByName(groupIp);
 
-        byte[] buffer = new byte[256];
-        InetAddress address = InetAddress.getByName(hostName);
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, portNumber);
+        socket.joinGroup(address);
 
-        socket.send(packet);
+        System.out.println("Waiting for server...");
 
-        packet = new DatagramPacket(buffer, buffer.length);
+        DatagramPacket packet;
 
-        socket.receive(packet);
+        for (int i = 0; i < 5; i++) {
+            byte[] buffer = new byte[256];
+            packet = new DatagramPacket(buffer, buffer.length);
 
-        String time = new String(packet.getData(), 0, packet.getLength());
-        System.out.println("Current time: " + time);
+            socket.receive(packet);
 
+            String time = new String(packet.getData(), 0, packet.getLength());
+            System.out.println("Current time: " + time);
+        }
+
+        socket.leaveGroup(address);
         socket.close();
     }
 }

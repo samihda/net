@@ -3,47 +3,55 @@ import java.net.*;
 import java.util.*;
 
 class TimeServerThread extends Thread {
-    private DatagramSocket socket = null;
+    private MulticastSocket socket = null;
+    private int port;
+    private String group;
 
-    public TimeServerThread(int port) throws IOException {
-        this(port, "TimeServerThread");
+    public TimeServerThread(int port, String group) throws IOException {
+        this(port, group, "TimeServerThread");
     }
 
-    public TimeServerThread(int port, String name) throws IOException {
+    public TimeServerThread(int port, String group, String name) throws IOException {
         super(name);
-        socket = new DatagramSocket(port);
+        this.port = port;
+        this.group = group;
+        socket = new MulticastSocket(port);
     }
 
     public void run() {
-        try {
-            byte[] buffer = new byte[256];
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+        System.out.println("Listening...");
 
-            System.out.println("Listening...");
-            socket.receive(packet);
+        while (true) {
+            try {
+                byte[] buffer = new Date().toString().getBytes();
+                InetAddress address = InetAddress.getByName(group);
 
-            InetAddress address = packet.getAddress();
-            int port = packet.getPort();
-            buffer = new Date().toString().getBytes();
-            packet = new DatagramPacket(buffer, buffer.length, address, port);
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
 
-            socket.send(packet);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+                System.out.println("Broadcasted at " + new String(buffer));
+                socket.send(packet);
+
+                try {
+                    sleep(5000);
+                } catch (InterruptedException e) {}
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
 
-        socket.close();
+        // socket.close();
     }
 }
 
 public class TimeServer {
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.err.println("Usage: java TimeServer <port>");
+        if (args.length != 2) {
+            System.err.println("Usage: java TimeServer <group> <port>");
             System.exit(1);
         }
 
-        int portNumber = Integer.parseInt(args[0]);
-        new TimeServerThread(portNumber).start();
+        String groupIp = args[0]; // 224.0.0.0 - 239.255.255.255
+        int portNumber = Integer.parseInt(args[1]);
+        new TimeServerThread(portNumber, groupIp).start();
     }
 }
