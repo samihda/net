@@ -5,13 +5,13 @@ import java.util.*;
 class TimeServerThread extends Thread {
     private DatagramSocket socket = null;
 
-    public TimeServerThread() throws IOException {
-        this("TimeServerThread");
+    public TimeServerThread(int port) throws IOException {
+        this(port, "TimeServerThread");
     }
 
-    public TimeServerThread(String name) throws IOException {
+    public TimeServerThread(int port, String name) throws IOException {
         super(name);
-        socket = new DatagramSocket(4444);
+        socket = new DatagramSocket(port);
     }
 
     public void run() {
@@ -38,6 +38,12 @@ class TimeServerThread extends Thread {
 
 public class TimeServer {
     public static void main(String[] args) throws IOException {
-        new TimeServerThread().start();
+        if (args.length != 1) {
+            System.err.println("Usage: java TimeServer <port>");
+            System.exit(1);
+        }
+
+        int portNumber = Integer.parseInt(args[0]);
+        new TimeServerThread(portNumber).start();
     }
 }
